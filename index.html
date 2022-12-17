@@ -11,12 +11,16 @@
 			crossorigin="anonymous"
 		/>
 	</head>
-	<body class="container">
-		<div class="row justify-content-around py-5">
+	<body class="container px-1">
+		<div class="row justify-content-around py-3">
 			<div class="column col-8">
-				<canvas id="main_canvas" class="w-100 h-100 border border-3"></canvas>
+				<canvas
+					id="main_canvas"
+					class="w-100 h-100 border border-3"
+					style="max-height: 95vh"
+				></canvas>
 			</div>
-			<div class="column col-3">
+			<div class="column col-4">
 				<div class="row">
 					<div class="form-floating my-1 p-1">
 						<input type="number" class="form-control" id="Y0" value="0" />
@@ -42,22 +46,34 @@
 						<input type="number" class="form-control" id="r" value="1" />
 						<label for="r">Радиус</label>
 					</div>
-                    <div class="form-floating my-1 p-1">
+					<div class="form-floating my-1 p-1">
 						<input type="number" class="form-control" id="ro" value="1.23" />
 						<label for="ro">Сопротивление воздуха</label>
 					</div>
-                    <div class="form-floating my-1 p-1">
+					<div class="form-floating my-1 p-1">
 						<input type="number" class="form-control" id="delta" value="0.01" />
 						<label for="delta">Дельта</label>
 					</div>
-                    <div class="form-floating my-1 p-1">
-						<input type="number" class="form-control" id="scale" value="1" />
+					<div class="form-floating my-1 p-1">
+						<input type="number" class="form-control" id="scale" value="2" />
 						<label for="scale">Масштаб</label>
 					</div>
 
 					<button class="btn btn-primary" id="count">Посчитать</button>
 				</div>
 				<div class="row">
+					<div class="row">
+						<p>Время полёта: <span id="info_time"></span></p>
+					</div>
+					<div class="row">
+						<p>Максимальная высота: <span id="info_max_height"></span></p>
+					</div>
+					<div class="row">
+						<p>X падения: <span id="info_fall_x"></span></p>
+					</div>
+					<div class="row">
+						<p>Смещение по X: <span id="info_delta_x"></span></p>
+					</div>
 					<div id="info">0 0</div>
 				</div>
 			</div>

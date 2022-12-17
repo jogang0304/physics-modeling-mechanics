@@ -60,7 +60,7 @@ function draw_coordinates(scale: number, offset_x: number, offset_y: number) {
 }
 function set_resolution() {
 	canvas.style.width = 1000 + "px";
-	canvas.style.height = 900 + "px";
+	canvas.style.height = 1000 + "px";
 	canvas.width = parseInt(canvas.style.width);
 	canvas.height = parseInt(canvas.style.height);
 }
@@ -74,6 +74,13 @@ interface Ball {
 	Y0: number;
 	X0: number;
 }
+interface Stats {
+	time: number;
+	max_height: number;
+	fall_x: number;
+	delta_x: number;
+}
+
 function calculate_new_ball(ball: Ball, delta: number): Ball {
 	let S = Math.PI * ball.r * ball.r;
 	let k = (ball.ro * C * S) / 2;
@@ -102,7 +109,7 @@ function calculate_new_ball(ball: Ball, delta: number): Ball {
 	return new_ball;
 }
 
-function process(ctx: CanvasRenderingContext2D) {
+function process(ctx: CanvasRenderingContext2D): Stats {
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
 	let Y0 = parseFloat((document.getElementById("Y0") as HTMLInputElement).value);
 	let X0 = parseFloat((document.getElementById("X0") as HTMLInputElement).value);
@@ -128,18 +135,39 @@ function process(ctx: CanvasRenderingContext2D) {
 		r: r,
 		ro: ro,
 	};
-	let time = 0;
+	let stats: Stats = {
+		time: 0,
+		max_height: 0,
+		fall_x: ball.X0,
+		delta_x: 0,
+	};
 	while (ball.Y0 >= 0) {
 		draw_point(ball.X0, ball.Y0, offset_x, offset_y, scale);
 		ball = calculate_new_ball(ball, delta);
-		time += delta;
-		console.log(ball.Y0);
-		console.log(ball.X0);
+		stats.time += delta;
+		if (ball.Y0 > stats.max_height) {
+			stats.max_height = ball.Y0;
+		}
 	}
+	stats.fall_x = ball.X0;
+	stats.delta_x = stats.fall_x - X0;
+	return stats;
+}
+
+function write_stats(stats: Stats) {
+	let time = document.getElementById("info_time") as HTMLSpanElement;
+	let max_height = document.getElementById("info_max_height") as HTMLSpanElement;
+	let fall_x = document.getElementById("info_fall_x") as HTMLSpanElement;
+	let delta_x = document.getElementById("info_delta_x") as HTMLSpanElement;
+	time.innerHTML = stats.time.toFixed(3);
+	max_height.innerHTML = stats.max_height.toFixed(3);
+	fall_x.innerHTML = stats.fall_x.toFixed(3);
+	delta_x.innerHTML = stats.delta_x.toFixed(3);
 }
 
 count_button.addEventListener("click", function (e) {
 	info.innerHTML = "Идёт подсчёт...";
-	process(ctx);
+	let stats = process(ctx);
 	info.innerHTML = "0 0";
+	write_stats(stats);
 });
